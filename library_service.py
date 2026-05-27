@@ -4,12 +4,12 @@ from models import Book, Member, Loan
 
 class LibraryService:
     def __init__(self):
-        self._books = {}  # key = book.book_id
-        self._members = {}  # key = member.member_id
-        self._loans = {}  # key = loan.loan_id
+        self._books = {}  
+        self._members = {} 
+        self._loans = {}  
         self._loan_id_counter = 0
 
-    # Flowchart 1: Add Book
+  
     def add_book(self, book_id: str, title: str, author: str) -> None:
         if book_id in self._books:
             print("Error: Book ID already exists.")
@@ -18,7 +18,7 @@ class LibraryService:
         self._books[book_id] = book
         print(f"Book added: {title}")
 
-    # Flowchart 2: Register Member
+   
     def register_member(self, member_id: str, name: str, email: str) -> None:
         if member_id in self._members:
             print("Error: Member ID already exists.")
@@ -27,7 +27,7 @@ class LibraryService:
         self._members[member_id] = member
         print(f"Member registered: {name}")
 
-    # Flowchart 3: Borrow Book
+  
     def borrow_book(self, book_id: str, member_id: str) -> None:
         book = self._books.get(book_id)
         if book is None:
@@ -43,25 +43,25 @@ class LibraryService:
             print("Error: Book is not available.")
             return
 
-        # Create Loan
+       
         self._loan_id_counter += 1
         loan_id = f"L{self._loan_id_counter:04d}"
         loan_date = datetime.date.today().strftime("%Y-%m-%d")
         loan = Loan(loan_id, book_id, member_id, loan_date)
         self._loans[loan_id] = loan
 
-        # Update Book Availability
+
         book.available = False
         print(f"Book borrowed: {book.title}")
 
-    # Flowchart 4: Return Book
+    
     def return_book(self, book_id: str) -> None:
         book = self._books.get(book_id)
         if book is None:
             print("Error: Book not found.")
             return
 
-        # Find active loan for this book
+      
         active_loan = None
         for loan in self._loans.values():
             if loan.book_id == book_id and loan.is_active:
@@ -72,20 +72,20 @@ class LibraryService:
             print("Error: No active loan for this book.")
             return
 
-        # Update Loan and Book
+       
         active_loan.is_active = False
         active_loan.return_date = datetime.date.today().strftime("%Y-%m-%d")
         book.available = True
         print(f"Book returned: {book.title}")
 
-    # Flowchart 5: View Books
+   
     def view_books(self) -> list:
         return list(self._books.values())
 
-    # Flowchart 6: View Members
+   
     def view_members(self) -> list:
         return list(self._members.values())
 
-    # Flowchart 7: View Loans
+   
     def view_loans(self) -> list:
         return list(self._loans.values())
